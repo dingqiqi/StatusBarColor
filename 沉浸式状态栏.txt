@@ -1,0 +1,37 @@
+protected void initBar(int color) {
+        Window window = getWindow();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //5.0 以上直接设置状态栏颜色
+            window.setStatusBarColor(color);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            //根布局添加占位状态栏
+            ViewGroup decorView = (ViewGroup) window.getDecorView();
+            View statusBarView = new View(this);
+            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    getStatusBarHeight(this));
+            statusBarView.setBackgroundColor(color);
+            decorView.addView(statusBarView, lp);
+        }
+}
+
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
+
+	//主页才需要沉浸状态栏
+	if (isTaskRoot()) {
+	    initBar(Color.parseColor("#EC4A3B"));
+	}
+
+	setContentView(R.layout.activity_wxpage);
+
+	if (isTaskRoot()) {
+	    findViewById(R.id.frameLayout).setFitsSystemWindows(false);
+	} else {
+	    findViewById(R.id.frameLayout).setFitsSystemWindows(true);
+	}
+
+}
